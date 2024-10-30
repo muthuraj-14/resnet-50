@@ -38,12 +38,26 @@ st.title("ResNet-50 Image Classifier ")
 upload = st.file_uploader(label="Upload Image:", type=["png", "jpg", "jpeg"])
 
 if upload:
-    img = Image.open(upload)
+if upload:
+    try:
+        img = Image.open(upload).convert("RGB")
+        st.image(img, caption='Uploaded Image', use_column_width=True)
 
-    model = load_model()
-    preprocessed_img = preprocess_func(img)
-    probs, idxs = make_prediction(model, preprocessed_img)
-    feature_imp = interpret_prediction(model, preprocessed_img, idxs[0])
+        model = load_model()
+        st.write("Model loaded successfully.")
+
+        preprocess = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+        ])
+
+        preprocessed_img = preprocess(img)
+        probs, idxs = make_prediction(model, preprocessed_img)
+        feature_imp = interpret_prediction(model, preprocessed_img, idxs[0])
+
+        # Visualization code follows...
+
+
 
     main_fig = plt.figure(figsize=(12,3))
     ax = main_fig.add_subplot(111)
@@ -65,3 +79,5 @@ if upload:
 
     with col2:
         st.pyplot(interp_fig, use_container_width=True)
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
