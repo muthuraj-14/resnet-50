@@ -38,7 +38,6 @@ st.title("ResNet-50 Image Classifier ")
 upload = st.file_uploader(label="Upload Image:", type=["png", "jpg", "jpeg"])
 
 if upload:
-if upload:
     try:
         img = Image.open(upload).convert("RGB")
         st.image(img, caption='Uploaded Image', use_column_width=True)
